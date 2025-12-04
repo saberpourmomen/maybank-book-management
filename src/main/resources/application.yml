@@ -20,4 +20,5 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.SQLServerDialect
-
+external-api:
+  base-url: ${EXTERNAL_API_BASE_URL:http://localhost:8001/external-book/api/v1/book}

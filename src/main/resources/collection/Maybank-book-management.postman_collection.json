@@ -1,0 +1,237 @@
+{
+	"info": {
+		"_postman_id": "28a7cc9d-73b1-426a-8f29-f5c529467ea2",
+		"name": "Maybank-book-management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20445855",
+		"_collection_link": "https://solar-sunset-587119.postman.co/workspace/c9877824-5348-4728-86d8-fff83373c7dd/collection/20445855-28a7cc9d-73b1-426a-8f29-f5c529467ea2?action=share&source=collection_link&creator=20445855"
+	},
+	"item": [
+		{
+			"name": "getAllBooks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/v1/book/list?page=0&size=10",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"book",
+						"list"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "externalService-getByIsbn",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{externalURL}}/v1/book/isbn/9780134685991",
+					"host": [
+						"{{externalURL}}"
+					],
+					"path": [
+						"v1",
+						"book",
+						"isbn",
+						"9780134685991"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getByIsbn-toExternal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/v1/external-book/isbn/9780134685991",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"external-book",
+						"isbn",
+						"9780134685991"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "externalService-search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{externalURL}}/v1/book/search?title=Java&page=0&size=10",
+					"host": [
+						"{{externalURL}}"
+					],
+					"path": [
+						"v1",
+						"book",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Java"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search-toExternal",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/v1/external-book/search?title=Java&page=0&size=10",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"external-book",
+						"search"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Java"
+						},
+						{
+							"key": "page",
+							"value": "0"
+						},
+						{
+							"key": "size",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "save-book",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"title\": \"Distributed Systems\",\n    \"author\": \"Maarten van Steen, Andrew Tanenbaum\",\n    \"isbn\": \"9781543057386\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/v1/book/save",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"book",
+						"save"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Effective Java\",\n    \"author\": \"Joshua Bloch\",\n    \"isbn\": \"9780134685991\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/v1/book/update/02164852-67b8-4130-a339-a786252d20bd",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"v1",
+						"book",
+						"update",
+						"02164852-67b8-4130-a339-a786252d20bd"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		},
+		{
+			"key": "externalURL",
+			"value": ""
+		}
+	]
+}
