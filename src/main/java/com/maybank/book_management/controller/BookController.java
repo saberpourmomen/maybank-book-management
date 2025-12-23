@@ -20,17 +20,17 @@ public class BookController {
     @GetMapping("/list")
     public ResponseEntity<BookPageResponse<BookResponse>> getAll(@RequestParam(defaultValue = "0") int page,
                                                                  @RequestParam(defaultValue = "10") int size){
-      return new ResponseEntity<>(bookService.getAll(page,size), HttpStatus.OK);
+        return ResponseEntity.ok(bookService.getAll(page,size));
     }
 
     @PostMapping("/save")
     public ResponseEntity<BookResponse> save(@Valid @RequestBody BookRequest bookRequest){
-        return new ResponseEntity<>(bookService.create(bookRequest), HttpStatus.OK);
+        return ResponseEntity.ok(bookService.create(bookRequest));
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<BookResponse> update(@Valid @RequestBody BookRequest bookRequest,@PathVariable String id){
-        return new ResponseEntity<>(bookService.update(bookRequest,id), HttpStatus.OK);
+        return ResponseEntity.ok(bookService.update(bookRequest,id));
     }
 
 }

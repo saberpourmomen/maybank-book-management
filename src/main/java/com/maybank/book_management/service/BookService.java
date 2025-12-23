@@ -3,6 +3,8 @@ package com.maybank.book_management.service;
 import com.maybank.book_management.dto.BookPageResponse;
 import com.maybank.book_management.dto.BookRequest;
 import com.maybank.book_management.dto.BookResponse;
+import com.maybank.book_management.exception.BookNotFoundException;
+import com.maybank.book_management.exception.DuplicateBookException;
 import com.maybank.book_management.mapper.BookMapper;
 import com.maybank.book_management.model.Book;
 import com.maybank.book_management.repository.BookRepository;
@@ -34,6 +36,9 @@ public class BookService {
 
     @Transactional
     public BookResponse create(BookRequest bookRequest){
+        if (bookRepository.existsByIsbn(bookRequest.getIsbn())) {
+            throw new DuplicateBookException("The book is already exist with the same ISBN:"+bookRequest.getIsbn());
+        }
         Book book= BookMapper.mapToModel(bookRequest);
         log.info("saving book:[{}]", bookRequest.toString());
         return BookMapper.mapToResponse(bookRepository.save(book));
@@ -41,7 +46,13 @@ public class BookService {
 
     @Transactional
     public BookResponse update(BookRequest bookRequest, String id){
-        Book book = bookRepository.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id:"+id));
+        if (!book.getIsbn().equals(book.getIsbn())
+                && bookRepository.existsByIsbn(book.getIsbn())) {
+            throw new DuplicateBookException(
+                    "Another book already uses ISBN: " + book.getIsbn()
+            );
+        }
         book.setTitle(bookRequest.getTitle());
         book.setAuthor(bookRequest.getAuthor());
         book.setIsbn(bookRequest.getIsbn());

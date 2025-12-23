@@ -1,6 +1,7 @@
 package com.maybank.book_management.service;
 
 import com.maybank.book_management.config.ExternalApiProperties;
+import com.maybank.book_management.config.WebClientConfiguration;
 import com.maybank.book_management.dto.BookResponse;
 import com.maybank.book_management.dto.BookPageResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
@@ -17,36 +19,32 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Slf4j
 public class ExternalBookService {
 
-    private final RestTemplate restTemplate;
-    private final ExternalApiProperties externalApiProperties;
+    private final WebClient bookServiceWebClient;
 
     public BookResponse getByIsbn(String isbn) {
-        String url = externalApiProperties.getBaseUrl() + "/isbn/" + isbn;
-        log.info("calling external api getByIsbn URL: [{}]", url);
-        return restTemplate.getForObject(url, BookResponse.class);
+        log.info("Calling external API getByIsbn for ISBN: {}", isbn);
+        return bookServiceWebClient
+                .get()
+                .uri("/isbn/{isbn}", isbn)
+                .retrieve()
+                .bodyToMono(BookResponse.class)
+                .block();
     }
 
-    public ResponseEntity<BookPageResponse<BookResponse>> getByTitle(String title, int page, int size) {
+    public BookPageResponse<BookResponse> getByTitle(String title, int page, int size) {
+        log.info("Calling external API search for title: '{}' page: {} size: {}", title, page, size);
 
-        String url = externalApiProperties.getBaseUrl() + "/search";
-
-        UriComponentsBuilder builder = UriComponentsBuilder
-                .fromUriString(url)
-                .queryParam("title", title)
-                .queryParam("page", page)
-                .queryParam("size", size);
-
-        log.info("calling external search api URL: [{}] title:[{}] page: [{}] size:[{}]", url,title,page,size);
-
-        ResponseEntity<BookPageResponse<BookResponse>> response =
-                restTemplate.exchange(
-                        builder.toUriString(),
-                        HttpMethod.GET,
-                        null,
-                        new ParameterizedTypeReference<BookPageResponse<BookResponse>>() {}
-                );
-
-        return ResponseEntity.ok(response.getBody());
+        return bookServiceWebClient
+                .get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/search")
+                        .queryParam("title", title)
+                        .queryParam("page", page)
+                        .queryParam("size", size)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<BookPageResponse<BookResponse>>() {})
+                .block();
     }
 
 }

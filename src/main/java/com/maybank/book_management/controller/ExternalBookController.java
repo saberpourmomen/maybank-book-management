@@ -4,6 +4,7 @@ import com.maybank.book_management.dto.BookResponse;
 import com.maybank.book_management.dto.BookPageResponse;
 import com.maybank.book_management.service.ExternalBookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +17,13 @@ public class ExternalBookController {
 
     @GetMapping("/isbn/{isbn}")
     public ResponseEntity<BookResponse> getByIsbn(@PathVariable String isbn) {
-        try {
-            return ResponseEntity.ok(externalBookService.getByIsbn(isbn));
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(externalBookService.getByIsbn(isbn));
     }
 
     @GetMapping("/search")
     public ResponseEntity<BookPageResponse<BookResponse>> searchByName(@RequestParam String title,
                                                                        @RequestParam(defaultValue = "0") int page,
                                                                        @RequestParam(defaultValue = "10") int size) {
-        return   externalBookService.getByTitle(title,page,size);
+        return ResponseEntity.ok(externalBookService.getByTitle(title,page,size));
     }
 }

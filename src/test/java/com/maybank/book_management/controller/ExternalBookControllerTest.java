@@ -1,8 +1,10 @@
 package com.maybank.book_management.controller;
 
-import com.maybank.book_management.dto.BookResponse;
 import com.maybank.book_management.dto.BookPageResponse;
+import com.maybank.book_management.dto.BookResponse;
+import com.maybank.book_management.exception.BookNotFoundException;
 import com.maybank.book_management.service.ExternalBookService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 class ExternalBookControllerTest {
@@ -48,12 +50,14 @@ class ExternalBookControllerTest {
     @Test
     void testGetByIsbn_NotFound() throws Exception {
         String isbn = "notfound";
-        when(externalBookService.getByIsbn(isbn)).thenThrow(new RuntimeException("Book not found"));
 
-        ResponseEntity<BookResponse> response = externalBookController.getByIsbn(isbn);
+        when(externalBookService.getByIsbn(isbn))
+                .thenThrow(new BookNotFoundException("Book not found"));
 
-        assertEquals(404, response.getStatusCodeValue());
-        verify(externalBookService, times(1)).getByIsbn(isbn);
+        Assertions.assertThrows(BookNotFoundException.class,
+                () -> externalBookController.getByIsbn(isbn));
+
+        verify(externalBookService).getByIsbn(isbn);
     }
 
     @Test
@@ -68,7 +72,8 @@ class ExternalBookControllerTest {
         mockPageResponse.setSize(size);
         mockPageResponse.setTotalElements(1);
 
-        when(externalBookService.getByTitle(title, page, size)).thenReturn(ResponseEntity.ok(mockPageResponse));
+        when(externalBookService.getByTitle(title, page, size))
+                .thenReturn(mockPageResponse);
 
         ResponseEntity<BookPageResponse<BookResponse>> response =
                 externalBookController.searchByName(title, page, size);

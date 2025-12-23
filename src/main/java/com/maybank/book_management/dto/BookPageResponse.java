@@ -26,10 +26,10 @@ public class BookPageResponse<T> {
             this.totalElements = pageData.getTotalElements();
         }
 
-    public BookPageResponse(List<T> content, int page, int size, long totalElements) {
-        this.content = content != null ? content : new ArrayList<>();
-        this.page = page;
-        this.size = size;
-        this.totalElements = totalElements;
-    }
+//    public BookPageResponse(List<T> content, int page, int size, long totalElements) {
+//        this.content = content != null ? content : new ArrayList<>();
+//        this.page = page;
+//        this.size = size;
+//        this.totalElements = totalElements;
+//    }
 }

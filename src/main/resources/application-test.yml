@@ -9,6 +9,5 @@ spring:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
 
-external:
-  api:
-    baseUrl: http://localhost:8001
+external-api:
+  book-service-base-url: http://localhost:8001

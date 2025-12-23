@@ -3,6 +3,7 @@ package com.maybank.book_management.service;
 import com.maybank.book_management.dto.BookPageResponse;
 import com.maybank.book_management.dto.BookRequest;
 import com.maybank.book_management.dto.BookResponse;
+import com.maybank.book_management.exception.BookNotFoundException;
 import com.maybank.book_management.mapper.BookMapper;
 import com.maybank.book_management.model.Book;
 import com.maybank.book_management.repository.BookRepository;
@@ -37,7 +38,7 @@ class BookServiceTest {
 
     @Test
     void testGetAllBooks() {
-        // Arrange
+
         Book book1 = new Book();
         book1.setId("1");
         book1.setTitle("Book 1");
@@ -55,7 +56,7 @@ class BookServiceTest {
 
         when(bookRepository.findAll(pageable)).thenReturn(bookPage);
 
-        // Act
+
         BookPageResponse<BookResponse> response = bookService.getAll(0, 2);
 
         // Assert
@@ -68,7 +69,7 @@ class BookServiceTest {
 
     @Test
     void testCreateBook() {
-        // Arrange
+
         BookRequest request = new BookRequest();
         request.setTitle("New Book");
         request.setAuthor("New Author");
@@ -79,10 +80,8 @@ class BookServiceTest {
 
         when(bookRepository.save(any(Book.class))).thenReturn(savedBook);
 
-        // Act
         BookResponse response = bookService.create(request);
 
-        // Assert
         assertNotNull(response);
         assertEquals("New Book", response.getTitle());
         assertEquals("New Author", response.getAuthor());
@@ -95,7 +94,7 @@ class BookServiceTest {
 
     @Test
     void testUpdateBook() {
-        // Arrange
+
         String bookId = "123";
         BookRequest request = new BookRequest();
         request.setTitle("Updated Title");
@@ -111,10 +110,8 @@ class BookServiceTest {
         when(bookRepository.findById(bookId)).thenReturn(Optional.of(existingBook));
         when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         BookResponse response = bookService.update(request, bookId);
 
-        // Assert
         assertNotNull(response);
         assertEquals("Updated Title", response.getTitle());
         assertEquals("Updated Author", response.getAuthor());
@@ -126,15 +123,14 @@ class BookServiceTest {
 
     @Test
     void testUpdateBookNotFound() {
-        // Arrange
+
         String bookId = "999";
         BookRequest request = new BookRequest();
         when(bookRepository.findById(bookId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class,
                 () -> bookService.update(request, bookId));
-        assertEquals("Book not found", exception.getMessage());
+        assertEquals("Book not found with id:999", exception.getMessage());
         verify(bookRepository).findById(bookId);
         verify(bookRepository, never()).save(any(Book.class));
     }

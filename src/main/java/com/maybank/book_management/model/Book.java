@@ -19,6 +19,6 @@ public class Book {
 
     private String author;
 
-    @Column(nullable=false)
+    @Column(nullable=false,unique = true)
     private String isbn;
 }
