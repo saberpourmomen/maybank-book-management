@@ -47,8 +47,8 @@ public class BookService {
     @Transactional
     public BookResponse update(BookRequest bookRequest, String id){
         Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException("Book not found with id:"+id));
-        if (!book.getIsbn().equals(book.getIsbn())
-                && bookRepository.existsByIsbn(book.getIsbn())) {
+        if (!book.getIsbn().equals(bookRequest.getIsbn())
+                && bookRepository.existsByIsbn(bookRequest.getIsbn())) {
             throw new DuplicateBookException(
                     "Another book already uses ISBN: " + book.getIsbn()
             );
