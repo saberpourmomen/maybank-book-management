@@ -8,7 +8,7 @@ spring:
     name: book-management
 
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=TESTDB;encrypt=false
+    url: jdbc:sqlserver://${DB_HOST:localhost}:1433;databaseName=TESTDB;encrypt=false
     username: sa
     password: P@ss123Word
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
