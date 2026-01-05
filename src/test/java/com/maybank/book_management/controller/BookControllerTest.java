@@ -70,7 +70,7 @@ class BookControllerTest {
 
         ResponseEntity<BookResponse> response = bookController.save(request);
 
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(201, response.getStatusCodeValue());
         assertEquals("New Book", response.getBody().getTitle());
         assertEquals("ISBN123", response.getBody().getIsbn());
 
