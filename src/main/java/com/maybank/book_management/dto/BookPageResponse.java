@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class BookPageResponse<T> {
     private List<T> content = new ArrayList<>();
-    @JsonProperty("number")
     private int page;
     private int size;
     private long totalElements;
@@ -25,11 +24,4 @@ public class BookPageResponse<T> {
             this.size = pageData.getSize();
             this.totalElements = pageData.getTotalElements();
         }
-
-//    public BookPageResponse(List<T> content, int page, int size, long totalElements) {
-//        this.content = content != null ? content : new ArrayList<>();
-//        this.page = page;
-//        this.size = size;
-//        this.totalElements = totalElements;
-//    }
 }
